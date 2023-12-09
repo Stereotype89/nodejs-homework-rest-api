@@ -2,7 +2,7 @@ import contactService from "../models/contacts.js";
 import HttpError from "../helpers/HttpError.js";
 import contactAddSchema from "../schemas/contactAddSchema.js";
 
-const getAll = async (req, res) => {
+const getAll = async (req, res, next) => {
   try {
     const result = await contactService.listContacts();
     res.json(result);
