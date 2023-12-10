@@ -1,5 +1,5 @@
+const { nanoid } = "nanoid";
 const fs = require("fs/promises");
-const nanoid = "nanoid";
 const path = require("path");
 const contactPath = path.resolve("models", "contacts.json");
 
