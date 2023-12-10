@@ -1,4 +1,4 @@
-import HttpError from "../helpers/HttpError.js";
+const HttpError = "../helpers/HttpError.js";
 
 const isEmptyBody = async (req, res, next) => {
   const keys = Object.keys(req.body);
@@ -9,4 +9,4 @@ const isEmptyBody = async (req, res, next) => {
   next();
 };
 
-export default isEmptyBody;
+module.exports = isEmptyBody;

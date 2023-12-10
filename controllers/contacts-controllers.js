@@ -1,6 +1,6 @@
-import contactService from "../models/contacts.js";
-import HttpError from "../helpers/HttpError.js";
-import contactAddSchema from "../schemas/contactAddSchema.js";
+const contactService = require("../models/contacts.js");
+const HttpError = require("../helpers/HttpError.js");
+const contactAddSchema = require("../schemas/contactAddSchema.js");
 
 const getAll = async (req, res, next) => {
   try {
@@ -78,10 +78,10 @@ const updateContact = async (req, res, next) => {
   }
 };
 
-export default {
+module.exports = {
   getAll,
   getById,
-  deleteContact,
   addContact,
+  deleteContact,
   updateContact,
 };

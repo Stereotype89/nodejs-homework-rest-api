@@ -1,6 +1,6 @@
-import express from "express";
-import controllers from "../../controllers/contacts-controllers.js";
-import isEmptyBody from "../../middlewares/isEmprtyBody.js";
+const express = require("express");
+const controllers = require("../../controllers/contacts-controllers.js");
+const isEmptyBody = require("../../middlewares/isEmprtyBody.js");
 
 const router = express.Router();
 
@@ -14,4 +14,4 @@ router.delete("/:id", controllers.deleteContact);
 
 router.put("/:id", isEmptyBody, controllers.updateContact);
 
-export default router;
+module.exports = router;
