@@ -1,7 +1,7 @@
-const { nanoid } = "nanoid";
 const fs = require("fs/promises");
 const path = require("path");
 const contactPath = path.resolve("models", "contacts.json");
+const { nanoid } = "nanoid";
 
 const stringyfyContacts = (contacts) =>
   fs.writeFile(contactPath, JSON.stringify(contacts, null, 2));
