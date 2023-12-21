@@ -1,6 +1,6 @@
-const HttpError = require("../helpers/HttpError.js");
+const { HttpError } = require("../helpers/HttpError");
+const { ctrlWrapper } = require("../helpers/ctrlWrapper");
 const Contact = require("../models/contacts.js");
-const ctrlWrapper = require("../decorators/ctrlWrapper.js");
 
 const throwError = (result, id) => {
   if (!result) {
@@ -9,12 +9,13 @@ const throwError = (result, id) => {
 };
 
 const getAll = async (req, res) => {
+  console.log(Contact);
   const result = await Contact.find();
   res.json(result);
 };
 
 const getById = async (req, res, next) => {
-  const { id } = req.params;
+  const id = req.params;
   const result = await Contact.findById(id);
 
   throwError(result, id);
@@ -29,7 +30,7 @@ const addContact = async (req, res, next) => {
 };
 
 const deleteContact = async (req, res, next) => {
-  const { id } = req.params;
+  const id = req.params;
   const result = await Contact.findByIdAndDelete(id);
   throwError(result, id);
 
@@ -37,7 +38,7 @@ const deleteContact = async (req, res, next) => {
 };
 
 const updateContact = async (req, res, next) => {
-  const { id } = req.params;
+  const id = req.params;
   const result = await Contact.findByIdAndUpdate(id, req.body);
 
   throwError(result, id);

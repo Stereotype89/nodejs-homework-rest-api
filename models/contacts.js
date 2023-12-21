@@ -38,5 +38,6 @@ contactSchema.post("findOneAndUpdate", hooks.handleSaveError);
 contactSchema.pre("findOneAndUpdate", hooks.preUpdate);
 
 const Contact = model("contact", contactSchema);
+console.log("Contact =>", Contact);
 
 module.exports = { Contact, contactAddSchema, contactFavoriteSchema };
