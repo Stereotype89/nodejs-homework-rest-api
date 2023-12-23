@@ -1,55 +1,106 @@
-const { HttpError } = require("../helpers/HttpError");
-const { ctrlWrapper } = require("../helpers/ctrlWrapper");
-const Contact = require("../models/contacts.js");
+const { Contact } = require("../schemas/contacts");
 
-const throwError = (result, id) => {
-  if (!result) {
-    throw HttpError(404, `id: ${id} not found`);
-  }
-};
-
-const getAll = async (req, res) => {
-  console.log(Contact);
-  const result = await Contact.find();
-  res.json(result);
+const listContacts = async (req, res, next) => {
+  const contacts = await Contact.find({});
+  res.json({
+    status: "success",
+    code: 200,
+    contacts,
+  });
 };
 
 const getById = async (req, res, next) => {
-  const id = req.params;
-  const result = await Contact.findById(id);
-
-  throwError(result, id);
-
-  res.json(result);
+  const { contactId } = req.params;
+  const contact = await Contact.findById(contactId);
+  if (!contact) {
+    res.status(404).json({
+      status: "error",
+      code: 404,
+      message: `Contact with id ${contactId} not found`,
+    });
+    return;
+  }
+  res.json({
+    status: "success",
+    code: 200,
+    contact,
+  });
 };
 
-const addContact = async (req, res, next) => {
+const add = async (req, res, next) => {
   const result = await Contact.create(req.body);
-
-  res.status(201).json(result);
+  res.status(201).json({
+    status: "successfully created",
+    code: 201,
+    result,
+  });
 };
 
-const deleteContact = async (req, res, next) => {
-  const id = req.params;
-  const result = await Contact.findByIdAndDelete(id);
-  throwError(result, id);
-
-  res.json({ message: "contact deleted" });
+const updateById = async (req, res, next) => {
+  const { contactId } = req.params;
+  const result = await Contact.findByIdAndUpdate(contactId, req.body);
+  if (!result) {
+    res.status(404).json({
+      status: "error",
+      code: 404,
+      message: `Contact with id ${contactId} not found`,
+    });
+    return;
+  }
+  res.json({
+    status: "successfuly updated",
+    code: 202,
+    result,
+  });
 };
 
-const updateContact = async (req, res, next) => {
-  const id = req.params;
-  const result = await Contact.findByIdAndUpdate(id, req.body);
+const removeById = async (req, res, next) => {
+  const { contactId } = req.params;
+  const contact = await Contact.findByIdAndRemove(contactId);
+  if (!contact) {
+    res.status(404).json({
+      status: "error",
+      code: 404,
+      message: `Contact with id ${contactId} not found`,
+    });
+    return;
+  }
+  res.json({
+    status: "successfully deleted",
+    code: 204,
+  });
+};
 
-  throwError(result, id);
-
-  res.status(200).json(result);
+const updateStatusContactById = async (req, res) => {
+  if (req.body.favorite === undefined) {
+    res.status(400).json({
+      status: "error",
+      code: 404,
+      message: "missing field favorite",
+    });
+    return;
+  }
+  const { contactId } = req.params;
+  const result = await Contact.findByIdAndUpdate(contactId, req.body);
+  if (!result) {
+    res.status(404).json({
+      status: "error",
+      code: 404,
+      message: `Contact with id ${contactId} not found`,
+    });
+    return;
+  }
+  res.json({
+    status: "successfuly updated",
+    code: 202,
+  });
 };
 
 module.exports = {
-  getAll: ctrlWrapper(getAll),
-  getById: ctrlWrapper(getById),
-  addContact: ctrlWrapper(addContact),
-  updateContact: ctrlWrapper(updateContact),
-  deleteContact: ctrlWrapper(deleteContact),
+  listContacts,
+  getById,
+  add,
+  updateById,
+  removeById,
+  updateStatusContactById,
 };
