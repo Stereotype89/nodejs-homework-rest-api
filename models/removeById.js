@@ -1,7 +1,7 @@
 const getAll = require("./getAll");
 const updateContacts = require("./updateContacts");
 
-const removeContactById = async (id) => {
+const removeById = async (id) => {
   const contacts = await getAll();
   const idx = contacts.findIndex((item) => item.id === id);
   if (idx === -1) {
@@ -12,4 +12,4 @@ const removeContactById = async (id) => {
   return true;
 };
 
-module.exports = removeContactById;
+module.exports = removeById;
