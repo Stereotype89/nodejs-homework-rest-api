@@ -10,7 +10,7 @@ const getById = async (req, res, next) => {
   const contact = await Contact.findById(contactId).exec();
   if (!contact) {
     res.status(404).json({
-      message: `Contact with id ${contactId} not found`,
+      Message: "Not found",
     });
     return;
   }
@@ -19,44 +19,50 @@ const getById = async (req, res, next) => {
 
 const add = async (req, res, next) => {
   const result = await Contact.create(req.body);
+  if (!result) {
+    res.status(400).json({
+      Message: "Missing required name field",
+    });
+    return;
+  }
   res.status(201).json({
-    result,
+    Message: "Contact created",
   });
 };
 
 const updateById = async (req, res, next) => {
   const { contactId } = req.params;
-  const result = await Contact.findByIdAndUpdate({ contactId }, req.body);
+  const result = await Contact.findByIdAndUpdate(contactId, req.body);
   if (!result) {
     res.status(404).json({
-      message: `Contact with id ${contactId} not found`,
+      Message: `${contactId} not found`,
     });
     return;
   }
   res.json({
-    message: "Successfuly updated",
+    Message: "Successfuly updated",
     result,
   });
 };
 
 const removeById = async (req, res, next) => {
   const { contactId } = req.params;
-  const contact = await Contact.deleteOne({ contactId });
+  const contact = await Contact.findByIdAndDelete(contactId);
   if (!contact) {
     res.status(404).json({
-      message: `Contact with id ${contactId} not found`,
+      Message: "Not found",
     });
     return;
   }
   res.status(200).json({
-    message: "Contact deleted",
+    Message: "Contact deleted",
   });
 };
 
 const updateStatusContactById = async (req, res) => {
   if (req.body.favorite === undefined) {
     res.status(400).json({
-      message: "Missing field favorite",
+      Message: "Missing field favorite",
     });
     return;
   }
@@ -64,12 +70,12 @@ const updateStatusContactById = async (req, res) => {
   const result = await Contact.findByIdAndUpdate({ contactId }, req.body);
   if (!result) {
     res.status(404).json({
-      message: `Contact with id ${contactId} not found`,
+      Message: "Not found",
     });
     return;
   }
   res.json({
-    status: "Successfuly updated",
+    Message: "Successfuly updated",
   });
 };
 
