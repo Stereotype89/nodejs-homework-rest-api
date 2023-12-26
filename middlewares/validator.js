@@ -5,7 +5,7 @@ const validator = (schema) => {
       res.status(400).json({ Message: `Missing required ${error} field` });
       return;
     }
-    next();
+    next(error);
   };
 };
 module.exports = validator;

@@ -1,6 +1,13 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 
+const emailRegex =
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+// { minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }
+
+const phoneRegex =
+  /^[+]{1}[0-9]{2}[-]{1}[0-9]{3}[-]{1}[0-9]{3}[-]{1}[0-9]{2}[-]{1}[0-9]{2}$/;
+
 const contactSchema = Schema(
   {
     name: {
@@ -12,11 +19,13 @@ const contactSchema = Schema(
       type: String,
       required: true,
       unique: true,
+      match: emailRegex,
     },
     phone: {
       type: String,
       required: true,
       unique: true,
+      match: phoneRegex,
     },
     favorite: {
       type: Boolean,
@@ -27,9 +36,9 @@ const contactSchema = Schema(
 );
 
 const joiSchema = Joi.object({
-  name: Joi.string(),
-  email: Joi.string(),
-  phone: Joi.string(),
+  name: Joi.string().alphanum().min(3).max(30).required(),
+  email: Joi.string().email(emailRegex).required(),
+  phone: Joi.string().pattern(phoneRegex).required(),
   favorite: Joi.bool(),
 });
 
