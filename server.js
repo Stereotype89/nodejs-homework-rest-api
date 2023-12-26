@@ -1,8 +1,7 @@
-const mongoose = require("mongoose");
-const app = require("./app");
-const { DB_HOST } = process.env;
+import app from "./app.js";
+import mongoose from "mongoose";
 
-mongoose.set("strictQerry", true);
+const { DB_HOST } = process.env;
 
 mongoose
   .connect(DB_HOST)
