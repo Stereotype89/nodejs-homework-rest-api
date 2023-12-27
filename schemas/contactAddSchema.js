@@ -7,4 +7,9 @@ const contactAddSchema = Joi.object({
   favorite: Joi.boolean(),
 });
 
+contactAddSchema.post("save", (error, data, next) => {
+  console.log(error);
+  next();
+});
+
 export default contactAddSchema;
