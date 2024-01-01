@@ -1,10 +1,12 @@
-import express from "express";
-import logger from "morgan";
-import cors from "cors";
-import "dotenv/config";
+const express = require("express");
+const logger = require("morgan");
+const cors = require("cors");
+const dotenv = require("dotenv");
 
-import contactsRouter from "./routes/api/contacts-routes.js";
+const authRouter = require("./routes/api/users");
+const contactsRouter = require("./routes/api/contacts");
 
+dotenv.config();
 const app = express();
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
@@ -13,6 +15,7 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
+app.use("/api/users", authRouter);
 app.use("/api/contacts", contactsRouter);
 
 app.use((req, res) => {
@@ -20,8 +23,8 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  const { status = 500, message = "Server error" } = err;
-  res.status(status).json({ message });
+  const { status = 500 } = err;
+  res.status(status).json({ message: err.message });
 });
 
-export default app;
+module.exports = app;

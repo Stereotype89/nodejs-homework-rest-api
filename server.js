@@ -1,9 +1,11 @@
-import app from "./app.js";
-import mongoose from "mongoose";
+const mogoose = require("mongoose");
+const app = require("./app");
 
 const { DB_HOST } = process.env;
 
-mongoose
+mogoose.set("strictQuery", true);
+
+mogoose
   .connect(DB_HOST)
   .then(() => {
     app.listen(3000);

@@ -1,44 +1,47 @@
-import { Schema, model } from "mongoose";
-import Joi from "joi";
-import * as hooks from "../hooks/hooks.js";
+const { Schema, model } = require("mongoose");
+const mongooseError = require("../helpers/mongooseError");
+const Joi = require("joi");
 
-export const contactAddSchema = Joi.object({
-  name: Joi.string(),
-  email: Joi.string(),
-  phone: Joi.string(),
-  favorite: Joi.boolean(),
-});
-
-export const contactFavoriteSchema = Joi.object({
-  favorite: Joi.boolean().required(),
-});
+const phoneRegexp = /^\(\d{3}[- _]*\) \d{3}-\d{4}$/;
 
 const contactSchema = new Schema(
   {
-    name: {
-      type: String,
-      required: [true, "Set name for contact"],
-    },
-    email: {
-      type: String,
-      required: [true, "Set email for contact"],
-    },
-    phone: {
-      type: String,
-      required: [true, "Set phone for contact"],
-    },
+    name: { type: String, required: [true, "Set name for contact"] },
+    email: { type: String, required: true },
+    phone: { type: String, match: phoneRegexp, required: true },
     favorite: {
       type: Boolean,
       default: false,
     },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
   },
-  { versionKey: false }
+  { versionKey: false, timestamps: true }
 );
 
-contactSchema.post("save", hooks.handleSaveError);
-contactSchema.post("findOneAndUpdate", hooks.handleSaveError);
-contactSchema.pre("findOneAndUpdate", hooks.preUpdate);
+const updateFavorite = Joi.object({
+  favorite: Joi.boolean().required(),
+});
+
+const addSchema = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().required(),
+  phone: Joi.string().pattern(phoneRegexp).required(),
+});
+
+contactSchema.post("save", mongooseError);
+
+const schema = {
+  addSchema,
+  updateFavorite,
+};
 
 const Contact = model("contact", contactSchema);
 
-export default Contact;
+module.exports = {
+  Contact,
+  schema,
+};
