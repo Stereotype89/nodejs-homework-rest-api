@@ -1,4 +1,4 @@
-const { User } = require("../models/user-model");
+const { User } = require("../models/user");
 const HttpError = require("../helpers/HttpError");
 const contWrapper = require("../helpers/contWrapper");
 const bcrypt = require("bcrypt");
