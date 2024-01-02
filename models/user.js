@@ -1,12 +1,13 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
-const mongooseError = require("../helpers/mongooseError");
+const handleMongooseError = require("../helpers/mongooseError");
 
 const emailRegexp = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 const subscriptionList = ["starter", "pro", "business"];
 
 const userSchema = new Schema(
   {
+    name: { type: String, require: false },
     password: { type: String, required: [true, "Password is required"] },
     email: {
       type: String,
@@ -23,13 +24,18 @@ const userSchema = new Schema(
       type: String,
       default: null,
     },
+    avatarURL: {
+      type: String,
+      require: true,
+    },
   },
   { versionKey: false, timestamps: true }
 );
 
-userSchema.post("save", mongooseError);
+userSchema.post("save", handleMongooseError);
 
 const registerSchema = Joi.object({
+  name: Joi.string(),
   email: Joi.string().pattern(emailRegexp).required(),
   password: Joi.string().required(),
   subscription: Joi.string(),
