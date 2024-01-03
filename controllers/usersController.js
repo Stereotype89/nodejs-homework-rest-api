@@ -50,16 +50,12 @@ const login = async (req, res) => {
   });
 };
 
-const getCurrent = async (req, res, next) => {
-  const user = req.user;
-  const { token } = req.params;
-  if (user.token !== token) {
-    throw HttpError(401, "Not authorized");
-  }
+const getCurrent = async (req, res) => {
+  const { email, subscription } = req.user;
 
   res.json({
-    email: user.email,
-    subscription: user.subscription,
+    email,
+    subscription,
   });
 };
 
